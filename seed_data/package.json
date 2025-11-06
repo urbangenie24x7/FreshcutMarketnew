@@ -1,0 +1,12 @@
+{
+  "name": "freshcuts-seed-data",
+  "version": "1.0.0",
+  "description": "Seed data uploader for FreshCuts Firebase database",
+  "main": "upload_seed.js",
+  "scripts": {
+    "upload": "node upload_seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

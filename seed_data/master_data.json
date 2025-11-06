@@ -1,0 +1,361 @@
+{
+  "product_catalog": {
+    "cat_goat_001": {
+      "id": "cat_goat_001",
+      "name": "Mutton (Bone-in)",
+      "category": "goat",
+      "description": "Fresh goat meat with bone, perfect for curry",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1588347818133-6b2e6b2e8b8a?w=400"],
+      "suggestedPrice": 650.0
+    },
+    "cat_goat_002": {
+      "id": "cat_goat_002",
+      "name": "Mutton Curry Cut",
+      "category": "goat",
+      "description": "Goat meat cut into curry pieces",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400"],
+      "suggestedPrice": 680.0
+    },
+    "cat_chicken_001": {
+      "id": "cat_chicken_001",
+      "name": "Broiler Chicken (Whole)",
+      "category": "chicken",
+      "description": "Fresh broiler chicken, whole bird",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400"],
+      "suggestedPrice": 260.0
+    },
+    "cat_fish_001": {
+      "id": "cat_fish_001",
+      "name": "Rohu Fish",
+      "category": "fish",
+      "description": "Fresh water rohu fish",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400"],
+      "suggestedPrice": 280.0
+    },
+    "cat_eggs_001": {
+      "id": "cat_eggs_001",
+      "name": "Farm Fresh Eggs (White)",
+      "category": "eggs",
+      "description": "Fresh white eggs from farm",
+      "unit": "piece",
+      "imageUrls": ["https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400"],
+      "suggestedPrice": 5.0
+    }
+  },
+  "users": {
+    "user_vendor_001": {
+      "id": "user_vendor_001",
+      "email": "rajesh@freshcuts.com",
+      "name": "Rajesh Kumar",
+      "phone": "+919876543210",
+      "type": "vendor"
+    },
+    "user_vendor_002": {
+      "id": "user_vendor_002",
+      "email": "mohammed@freshcuts.com",
+      "name": "Mohammed Ali",
+      "phone": "+918765432109",
+      "type": "vendor"
+    },
+    "user_vendor_003": {
+      "id": "user_vendor_003",
+      "email": "srinivas@freshcuts.com",
+      "name": "Srinivas Reddy",
+      "phone": "+917654321098",
+      "type": "vendor"
+    },
+    "user_vendor_004": {
+      "id": "user_vendor_004",
+      "email": "venkat@freshcuts.com",
+      "name": "Venkat Rao",
+      "phone": "+919988776655",
+      "type": "vendor"
+    },
+    "user_vendor_005": {
+      "id": "user_vendor_005",
+      "email": "krishna@freshcuts.com",
+      "name": "Krishna Murthy",
+      "phone": "+919123456789",
+      "type": "vendor"
+    },
+    "user_vendor_006": {
+      "id": "user_vendor_006",
+      "email": "ahmed@freshcuts.com",
+      "name": "Ahmed Khan",
+      "phone": "+919234567890",
+      "type": "vendor"
+    },
+    "user_vendor_007": {
+      "id": "user_vendor_007",
+      "email": "lakshman@freshcuts.com",
+      "name": "Lakshman Singh",
+      "phone": "+919345678901",
+      "type": "vendor"
+    },
+    "user_vendor_008": {
+      "id": "user_vendor_008",
+      "email": "ravi@freshcuts.com",
+      "name": "Ravi Sharma",
+      "phone": "+919456789012",
+      "type": "vendor"
+    },
+    "user_vendor_009": {
+      "id": "user_vendor_009",
+      "email": "suresh@freshcuts.com",
+      "name": "Suresh Gupta",
+      "phone": "+919567890123",
+      "type": "vendor"
+    },
+    "user_vendor_010": {
+      "id": "user_vendor_010",
+      "email": "murali@freshcuts.com",
+      "name": "Murali Krishna",
+      "phone": "+919678901234",
+      "type": "vendor"
+    }
+  },
+  "vendors": {
+    "vendor_001": {
+      "id": "vendor_001",
+      "userId": "user_vendor_001",
+      "shopName": "Fresh Meat Corner",
+      "description": "Fresh meat shop in RAM SVR",
+      "phone": "+919876543210",
+      "address": "RAM SVR Colony, Main Road",
+      "latitude": 17.4156,
+      "longitude": 78.3823,
+      "categories": ["goat", "chicken"],
+      "isActive": true,
+      "rating": 4.5,
+      "totalOrders": 150
+    },
+    "vendor_002": {
+      "id": "vendor_002",
+      "userId": "user_vendor_002",
+      "shopName": "RAM SVR Chicken Center",
+      "description": "Chicken and eggs specialist",
+      "phone": "+918765432109",
+      "address": "Near RAM SVR Temple, Hyderabad",
+      "latitude": 17.4167,
+      "longitude": 78.3834,
+      "categories": ["chicken", "eggs"],
+      "isActive": true,
+      "rating": 4.2,
+      "totalOrders": 89
+    },
+    "vendor_003": {
+      "id": "vendor_003",
+      "userId": "user_vendor_003",
+      "shopName": "Madhapur Fish Market",
+      "description": "Fresh fish daily from Vizag",
+      "phone": "+917654321098",
+      "address": "Madhapur Main Road, Near Metro",
+      "latitude": 17.4489,
+      "longitude": 78.3912,
+      "categories": ["fish"],
+      "isActive": true,
+      "rating": 4.6,
+      "totalOrders": 156
+    },
+    "vendor_004": {
+      "id": "vendor_004",
+      "userId": "user_vendor_004",
+      "shopName": "Gachibowli Meat Corner",
+      "description": "Premium mutton and chicken",
+      "phone": "+919988776655",
+      "address": "Gachibowli DLF Road, IT Hub",
+      "latitude": 17.4234,
+      "longitude": 78.3456,
+      "categories": ["goat", "chicken"],
+      "isActive": true,
+      "rating": 4.4,
+      "totalOrders": 203
+    },
+    "vendor_005": {
+      "id": "vendor_005",
+      "userId": "user_vendor_005",
+      "shopName": "Kondapur Poultry Farm",
+      "description": "Farm fresh chicken and eggs",
+      "phone": "+919123456789",
+      "address": "Kondapur Village Road, Near JNTU",
+      "latitude": 17.4567,
+      "longitude": 78.3678,
+      "categories": ["chicken", "eggs"],
+      "isActive": true,
+      "rating": 4.3,
+      "totalOrders": 134
+    },
+    "vendor_006": {
+      "id": "vendor_006",
+      "userId": "user_vendor_006",
+      "shopName": "Miyapur Mutton Shop",
+      "description": "Halal mutton specialist",
+      "phone": "+919234567890",
+      "address": "Miyapur Main Road, Metro Station",
+      "latitude": 17.4923,
+      "longitude": 78.3234,
+      "categories": ["goat"],
+      "isActive": true,
+      "rating": 4.5,
+      "totalOrders": 187
+    },
+    "vendor_007": {
+      "id": "vendor_007",
+      "userId": "user_vendor_007",
+      "shopName": "Kukatpally Fish Hub",
+      "description": "Sea fish and prawns",
+      "phone": "+919345678901",
+      "address": "Kukatpally Housing Board Colony",
+      "latitude": 17.4845,
+      "longitude": 78.4123,
+      "categories": ["fish"],
+      "isActive": true,
+      "rating": 4.1,
+      "totalOrders": 98
+    },
+    "vendor_008": {
+      "id": "vendor_008",
+      "userId": "user_vendor_008",
+      "shopName": "Hitech City Organic Meat",
+      "description": "Organic meat and free-range chicken",
+      "phone": "+919456789012",
+      "address": "Hitech City Phase 2, Near Cyber Towers",
+      "latitude": 17.4456,
+      "longitude": 78.3789,
+      "categories": ["goat", "chicken"],
+      "isActive": true,
+      "rating": 4.7,
+      "totalOrders": 245
+    },
+    "vendor_009": {
+      "id": "vendor_009",
+      "userId": "user_vendor_009",
+      "shopName": "Jubilee Hills Premium Meats",
+      "description": "Premium cuts and exotic meats",
+      "phone": "+919567890123",
+      "address": "Jubilee Hills Road No 36, Check Post",
+      "latitude": 17.4312,
+      "longitude": 78.4067,
+      "categories": ["goat", "chicken", "fish"],
+      "isActive": true,
+      "rating": 4.8,
+      "totalOrders": 312
+    },
+    "vendor_010": {
+      "id": "vendor_010",
+      "userId": "user_vendor_010",
+      "shopName": "Banjara Hills Fish Market",
+      "description": "Fresh fish and seafood daily",
+      "phone": "+919678901234",
+      "address": "Banjara Hills Road No 12, Green Lands",
+      "latitude": 17.4123,
+      "longitude": 78.4234,
+      "categories": ["fish"],
+      "isActive": true,
+      "rating": 4.4,
+      "totalOrders": 167
+    }
+  },
+  "products": {
+    "prod_001_goat": {
+      "id": "prod_001_goat",
+      "vendorId": "vendor_001",
+      "name": "Hyderabadi Mutton",
+      "description": "Fresh goat meat from local farms",
+      "price": 650.0,
+      "category": "goat",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1588347818133-6b2e6b2e8b8a?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_002_chicken": {
+      "id": "prod_002_chicken",
+      "vendorId": "vendor_002",
+      "name": "Fresh Broiler Chicken",
+      "description": "Clean broiler chicken pieces",
+      "price": 260.0,
+      "category": "chicken",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_003_fish": {
+      "id": "prod_003_fish",
+      "vendorId": "vendor_003",
+      "name": "Pomfret Fish (Whole)",
+      "description": "Fresh pomfret from Vizag coast",
+      "price": 450.0,
+      "category": "fish",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1535140728325-781d4e9cef88?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_004_goat": {
+      "id": "prod_004_goat",
+      "vendorId": "vendor_004",
+      "name": "Premium Mutton Curry Cut",
+      "description": "Premium mutton cut for curry",
+      "price": 720.0,
+      "category": "goat",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_005_chicken": {
+      "id": "prod_005_chicken",
+      "vendorId": "vendor_005",
+      "name": "Country Chicken (Live Weight)",
+      "description": "Free-range country chicken",
+      "price": 320.0,
+      "category": "chicken",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_006_goat": {
+      "id": "prod_006_goat",
+      "vendorId": "vendor_006",
+      "name": "Halal Mutton (Bone-in)",
+      "description": "Fresh halal mutton with bone",
+      "price": 680.0,
+      "category": "goat",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1588347818133-6b2e6b2e8b8a?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_007_fish": {
+      "id": "prod_007_fish",
+      "vendorId": "vendor_007",
+      "name": "King Fish Steaks",
+      "description": "Fresh king fish cut into steaks",
+      "price": 380.0,
+      "category": "fish",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    },
+    "prod_008_chicken": {
+      "id": "prod_008_chicken",
+      "vendorId": "vendor_008",
+      "name": "Organic Chicken Breast",
+      "description": "Organic boneless chicken breast",
+      "price": 380.0,
+      "category": "chicken",
+      "unit": "kg",
+      "imageUrls": ["https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400"],
+      "isAvailable": true,
+      "createdAt": 1762239536021
+    }
+  }
+}
