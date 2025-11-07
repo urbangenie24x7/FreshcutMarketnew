@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Navigation from '../../components/Navigation'
+import SEOHead from '../../components/SEOHead'
 
 export default function VendorDashboard() {
   const [mounted, setMounted] = useState(false)
@@ -18,6 +19,8 @@ export default function VendorDashboard() {
     minValueForFreeDelivery: 0,
     specialOffer: ''
   })
+  const [editingProduct, setEditingProduct] = useState(null)
+  const [editData, setEditData] = useState({})
 
   useEffect(() => {
     setMounted(true)
@@ -121,6 +124,11 @@ export default function VendorDashboard() {
 
   return (
     <>
+      <SEOHead 
+        title={`${currentVendor?.name || 'Vendor'} Dashboard | FreshCuts`}
+        description="Manage your meat vendor business. Add products, set prices, manage orders and track sales on FreshCuts marketplace."
+        url="https://freshcuts.com/vendor"
+      />
       <Navigation />
       <div style={{ padding: '20px', fontFamily: 'Arial', maxWidth: '1200px', margin: '0 auto' }}>
       <header style={{ marginBottom: '40px' }}>
@@ -411,63 +419,251 @@ export default function VendorDashboard() {
                 
                 {isOffered ? (
                   <div>
-                    <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '4px' }}>
-                      Your Price: ₹{vendorProduct.price}
-                    </p>
-                    <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '4px' }}>
-                      Delivery: {vendorProduct.deliveryTime}
-                    </p>
-                    <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '8px' }}>
-                      Delivery: {vendorProduct.deliveryOption === 'free' ? 'Free' : 
-                                vendorProduct.deliveryOption === 'charges' ? `₹${vendorProduct.deliveryCharges}` :
-                                `₹${vendorProduct.deliveryCharges} (Free above ₹${vendorProduct.minValueForFreeDelivery})`}
-                    </p>
-                    {vendorProduct.specialOffer && (
-                      <p style={{ color: '#16a34a', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                        Offer: {vendorProduct.specialOffer}
-                      </p>
+                    {editingProduct === vendorProduct.id ? (
+                      <div style={{ border: '1px solid #e5e7eb', borderRadius: '6px', padding: '12px', backgroundColor: '#f9fafb', marginBottom: '8px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                          <div>
+                            <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Price (₹)</label>
+                            <input
+                              type="number"
+                              value={editData.price || ''}
+                              onChange={(e) => setEditData({...editData, price: e.target.value})}
+                              style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Delivery Time</label>
+                            <select
+                              value={editData.deliveryTime || ''}
+                              onChange={(e) => setEditData({...editData, deliveryTime: e.target.value})}
+                              style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                            >
+                              <option value="30 mins">30 mins</option>
+                              <option value="1 hour">1 hour</option>
+                              <option value="2 hours">2 hours</option>
+                              <option value="3 hours">3 hours</option>
+                              <option value="Same day">Same day</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div style={{ marginBottom: '8px' }}>
+                          <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Delivery Option</label>
+                          <select
+                            value={editData.deliveryOption || ''}
+                            onChange={(e) => setEditData({...editData, deliveryOption: e.target.value})}
+                            style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                          >
+                            <option value="free">Free Delivery</option>
+                            <option value="charges">Delivery Charges</option>
+                            <option value="conditional">Free above minimum</option>
+                          </select>
+                        </div>
+                        {editData.deliveryOption === 'charges' && (
+                          <div style={{ marginBottom: '8px' }}>
+                            <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Delivery Charges (₹)</label>
+                            <input
+                              type="number"
+                              value={editData.deliveryCharges || ''}
+                              onChange={(e) => setEditData({...editData, deliveryCharges: e.target.value})}
+                              style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                            />
+                          </div>
+                        )}
+                        {editData.deliveryOption === 'conditional' && (
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                            <div>
+                              <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Charges (₹)</label>
+                              <input
+                                type="number"
+                                value={editData.deliveryCharges || ''}
+                                onChange={(e) => setEditData({...editData, deliveryCharges: e.target.value})}
+                                style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                              />
+                            </div>
+                            <div>
+                              <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Min Value (₹)</label>
+                              <input
+                                type="number"
+                                value={editData.minValueForFreeDelivery || ''}
+                                onChange={(e) => setEditData({...editData, minValueForFreeDelivery: e.target.value})}
+                                style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <div style={{ marginBottom: '8px' }}>
+                          <label style={{ fontSize: '12px', color: '#374151', marginBottom: '4px', display: 'block' }}>Special Offer</label>
+                          <input
+                            type="text"
+                            value={editData.specialOffer || ''}
+                            onChange={(e) => setEditData({...editData, specialOffer: e.target.value})}
+                            placeholder="e.g., Buy 2 get 1 free"
+                            style={{ width: '100%', padding: '6px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '12px' }}
+                          />
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <input
+                            type="checkbox"
+                            checked={editData.available !== false}
+                            onChange={(e) => setEditData({...editData, available: e.target.checked})}
+                            id={`available-${vendorProduct.id}`}
+                          />
+                          <label htmlFor={`available-${vendorProduct.id}`} style={{ fontSize: '12px', color: '#374151' }}>Available for sale</label>
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button
+                            onClick={async () => {
+                              try {
+                                const { doc, updateDoc } = await import('firebase/firestore')
+                                const { db } = await import('../../lib/firebase')
+                                await updateDoc(doc(db, 'vendorProducts', vendorProduct.id), {
+                                  price: parseFloat(editData.price),
+                                  available: editData.available,
+                                  deliveryTime: editData.deliveryTime,
+                                  deliveryOption: editData.deliveryOption,
+                                  deliveryCharges: editData.deliveryOption === 'charges' || editData.deliveryOption === 'conditional' ? parseFloat(editData.deliveryCharges) || 0 : 0,
+                                  minValueForFreeDelivery: editData.deliveryOption === 'conditional' ? parseFloat(editData.minValueForFreeDelivery) || 0 : 0,
+                                  specialOffer: editData.specialOffer || ''
+                                })
+                                setEditingProduct(null)
+                                setEditData({})
+                                loadVendorData()
+                                alert('Product updated successfully!')
+                              } catch (error) {
+                                alert('Error updating product: ' + error.message)
+                              }
+                            }}
+                            style={{
+                              padding: '4px 8px',
+                              backgroundColor: '#16a34a',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '4px',
+                              fontSize: '11px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingProduct(null)
+                              setEditData({})
+                            }}
+                            style={{
+                              padding: '4px 8px',
+                              backgroundColor: '#6b7280',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '4px',
+                              fontSize: '11px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '4px' }}>
+                          Your Price: ₹{vendorProduct.price}
+                        </p>
+                        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '4px' }}>
+                          Delivery: {vendorProduct.deliveryTime}
+                        </p>
+                        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '8px' }}>
+                          Delivery: {vendorProduct.deliveryOption === 'free' ? 'Free' : 
+                                    vendorProduct.deliveryOption === 'charges' ? `₹${vendorProduct.deliveryCharges}` :
+                                    `₹${vendorProduct.deliveryCharges} (Free above ₹${vendorProduct.minValueForFreeDelivery})`}
+                        </p>
+                        {vendorProduct.specialOffer && (
+                          <p style={{ color: '#16a34a', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                            Offer: {vendorProduct.specialOffer}
+                          </p>
+                        )}
+                      </div>
                     )}
-                    <button
-                      onClick={() => {
-                        setNewProduct({
-                          productId: product.id,
-                          price: vendorProduct.price,
-                          available: vendorProduct.available,
-                          deliveryTime: vendorProduct.deliveryTime,
-                          deliveryOption: vendorProduct.deliveryOption,
-                          deliveryCharges: vendorProduct.deliveryCharges || 0,
-                          minValueForFreeDelivery: vendorProduct.minValueForFreeDelivery || 0,
-                          specialOffer: vendorProduct.specialOffer || ''
-                        })
-                        setShowAddProduct(true)
-                      }}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#6b7280',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Edit Price
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        onClick={() => {
+                          setEditingProduct(vendorProduct.id)
+                          setEditData({
+                            price: vendorProduct.price,
+                            available: vendorProduct.available,
+                            deliveryTime: vendorProduct.deliveryTime,
+                            deliveryOption: vendorProduct.deliveryOption,
+                            deliveryCharges: vendorProduct.deliveryCharges || 0,
+                            minValueForFreeDelivery: vendorProduct.minValueForFreeDelivery || 0,
+                            specialOffer: vendorProduct.specialOffer || ''
+                          })
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#6b7280',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '12px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (confirm(`Remove ${product.name} from your store?`)) {
+                            try {
+                              const { doc, deleteDoc } = await import('firebase/firestore')
+                              const { db } = await import('../../lib/firebase')
+                              await deleteDoc(doc(db, 'vendorProducts', vendorProduct.id))
+                              loadVendorData()
+                              alert('Product removed from your store!')
+                            } catch (error) {
+                              alert('Error removing product: ' + error.message)
+                            }
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#ef4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '12px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <button
-                    onClick={() => {
-                      setNewProduct({
-                        productId: product.id,
-                        price: product.default_price,
-                        available: true,
-                        deliveryTime: '2 hours',
-                        deliveryOption: 'free',
-                        deliveryCharges: 0,
-                        minValueForFreeDelivery: 0,
-                        specialOffer: ''
-                      })
-                      setShowAddProduct(true)
+                    onClick={async () => {
+                      try {
+                        const { collection, addDoc, serverTimestamp } = await import('firebase/firestore')
+                        const { db } = await import('../../lib/firebase')
+                        
+                        await addDoc(collection(db, 'vendorProducts'), {
+                          productId: product.id,
+                          vendorId: currentVendor.id,
+                          price: product.default_price || 100,
+                          available: true,
+                          deliveryTime: '2 hours',
+                          deliveryOption: 'free',
+                          deliveryCharges: 0,
+                          minValueForFreeDelivery: 0,
+                          specialOffer: '',
+                          createdAt: serverTimestamp()
+                        })
+                        
+                        alert(`${product.name} added to your store!`)
+                        loadVendorData()
+                      } catch (error) {
+                        console.error('Error adding product:', error)
+                        alert('Error adding product: ' + error.message)
+                      }
                     }}
                     style={{
                       padding: '8px 16px',

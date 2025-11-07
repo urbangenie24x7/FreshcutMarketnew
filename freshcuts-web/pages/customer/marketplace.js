@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useCart } from '../../lib/CartContext'
+import SEOHead from '../../components/SEOHead'
 
 export default function CustomerMarketplace() {
+  const { addToCart, getCartCount } = useCart()
   const [mounted, setMounted] = useState(false)
   const [vendors, setVendors] = useState([])
   const [selectedVendor, setSelectedVendor] = useState(null)
@@ -53,9 +56,10 @@ export default function CustomerMarketplace() {
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .filter(vp => vp.vendorId === vendorId && vp.available)
       
-      // Get products
+      // Get products (force fresh data)
       const productsSnap = await getDocs(collection(db, 'products'))
       const products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      console.log('Loaded products with images:', products.map(p => ({ name: p.name, image: p.image_url })))
       
       // Combine vendor products with product details and calculate customer price
       const combinedProducts = vendorProducts.map(vp => {
@@ -73,7 +77,7 @@ export default function CustomerMarketplace() {
           minOrder: vp.minOrder,
           unit: product?.unit || 'kg',
           available: vp.available && product?.available,
-          imageUrl: product?.image_url || 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=300&fit=crop',
+          imageUrl: product?.image_url ? `${product.image_url}?t=${Date.now()}` : 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=300&fit=crop',
           variations: product?.variations || null
         }
       })
@@ -119,8 +123,63 @@ export default function CustomerMarketplace() {
 
   return (
     <>
+      {selectedVendor ? (
+        <SEOHead 
+          title={`${selectedVendor.name} - Fresh Meat Vendor | FreshCuts`}
+          description={`Buy fresh ${selectedVendor.products?.join(', ')} from ${selectedVendor.name}. Premium quality meat with fast delivery. ${vendorProducts.length} products available.`}
+          url={`https://freshcuts.com/vendor/${selectedVendor.id}`}
+          structuredData={{
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": selectedVendor.name,
+            "description": `Fresh meat vendor specializing in ${selectedVendor.products?.join(', ')}`,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Local Area"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Fresh Meat Products",
+              "itemListElement": vendorProducts.map(product => ({
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Product",
+                  "name": product.name,
+                  "image": product.imageUrl,
+                  "category": product.category
+                },
+                "price": product.price,
+                "priceCurrency": "INR"
+              }))
+            }
+          }}
+        />
+      ) : showVendors ? (
+        <SEOHead 
+          title={`${selectedCategory === 'all' ? 'All Categories' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Vendors | FreshCuts`}
+          description={`Find local ${selectedCategory === 'all' ? 'meat' : selectedCategory} vendors near you. Fresh quality guaranteed with fast delivery. ${filteredVendors.length} vendors available.`}
+          url={`https://freshcuts.com/category/${selectedCategory}`}
+        />
+      ) : (
+        <SEOHead 
+          title="FreshCuts - Fresh Meat Marketplace | Local Vendors"
+          description="Buy fresh meat from local vendors. Premium quality chicken, mutton, fish, prawns and more with free delivery. Support local businesses."
+          url="https://freshcuts.com"
+          structuredData={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "FreshCuts",
+            "description": "Fresh meat marketplace connecting customers with local vendors",
+            "url": "https://freshcuts.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://freshcuts.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }}
+        />
+      )}
       <Head>
-        <title>FreshCuts - Fresh Meat Marketplace</title>
         <style>{`
           @keyframes scroll-left {
             0% { transform: translate3d(100%, 0, 0); }
@@ -199,8 +258,27 @@ export default function CustomerMarketplace() {
           </div>
           
           <div style={{ display: 'flex', gap: '20px' }}>
-            <Link href="/customer/cart" style={{ color: 'white', textDecoration: 'none', fontSize: '20px' }}>
+            <Link href="/customer/cart" style={{ color: 'white', textDecoration: 'none', fontSize: '20px', position: 'relative' }}>
               🛒
+              {getCartCount() > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-8px',
+                  backgroundColor: '#ef4444',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold'
+                }}>
+                  {getCartCount()}
+                </span>
+              )}
             </Link>
             <Link href="/customer/orders" style={{ color: 'white', textDecoration: 'none', fontSize: '20px' }}>
               📦
@@ -391,14 +469,31 @@ export default function CustomerMarketplace() {
         <section>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
             <h2 style={{ fontSize: '24px', color: '#374151', margin: '0' }}>Available Products ({vendorProducts.length})</h2>
-            <div style={{ 
-              backgroundColor: '#f3f4f6', 
-              padding: '8px 16px', 
-              borderRadius: '20px',
-              fontSize: '14px',
-              color: '#6b7280'
-            }}>
-              Fresh stock updated daily
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <button
+                onClick={() => loadVendorProducts(selectedVendor.id)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: '500'
+                }}
+              >
+                🔄 Refresh
+              </button>
+              <div style={{ 
+                backgroundColor: '#f3f4f6', 
+                padding: '8px 16px', 
+                borderRadius: '20px',
+                fontSize: '14px',
+                color: '#6b7280'
+              }}>
+                Fresh stock updated daily
+              </div>
             </div>
           </div>
           {vendorProducts.length === 0 ? (
@@ -455,7 +550,7 @@ export default function CustomerMarketplace() {
                     )}
                     <img 
                       src={product.imageUrl}
-                      alt={product.name}
+                      alt={`Fresh ${product.name} - ${product.category} from ${selectedVendor.name} - ₹${product.price}`}
                       style={{
                         width: '100%',
                         height: '180px',
@@ -464,18 +559,65 @@ export default function CustomerMarketplace() {
                     />
                     <div style={{ padding: '20px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-                        <h3 style={{ color: '#374151', margin: '0', fontSize: '18px', fontWeight: '600' }}>{product.name}</h3>
-                        <span style={{
-                          backgroundColor: '#dcfce7',
-                          color: '#16a34a',
-                          padding: '4px 8px',
-                          borderRadius: '12px',
-                          fontSize: '12px',
-                          textTransform: 'capitalize',
-                          fontWeight: '500'
-                        }}>
-                          {product.category}
-                        </span>
+                        <Link href={`/product/${product.name.toLowerCase().replace(/\s+/g, '-')}`} style={{ textDecoration: 'none' }}>
+                          <h3 style={{ color: '#374151', margin: '0', fontSize: '18px', fontWeight: '600', cursor: 'pointer' }}>{product.name}</h3>
+                        </Link>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <span style={{
+                            backgroundColor: '#dcfce7',
+                            color: '#16a34a',
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            textTransform: 'capitalize',
+                            fontWeight: '500'
+                          }}>
+                            {product.category}
+                          </span>
+                          {selectedVendor && (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation()
+                                if (confirm(`Remove ${product.name} from ${selectedVendor.name}?`)) {
+                                  try {
+                                    const { collection, getDocs, doc, deleteDoc } = await import('firebase/firestore')
+                                    const { db } = await import('../../lib/firebase')
+                                    
+                                    const vendorProductsSnap = await getDocs(collection(db, 'vendorProducts'))
+                                    const vendorProduct = vendorProductsSnap.docs.find(doc => {
+                                      const data = doc.data()
+                                      return data.vendorId === selectedVendor.id && data.productId === product.id
+                                    })
+                                    
+                                    if (vendorProduct) {
+                                      await deleteDoc(doc(db, 'vendorProducts', vendorProduct.id))
+                                      loadVendorProducts(selectedVendor.id)
+                                      alert('Product removed from vendor!')
+                                    }
+                                  } catch (error) {
+                                    alert('Error removing product: ' + error.message)
+                                  }
+                                }
+                              }}
+                              style={{
+                                backgroundColor: '#ef4444',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '24px',
+                                height: '24px',
+                                fontSize: '12px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                              title="Remove from vendor"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
                       </div>
                       {/* Variations Selector */}
                       {product.variations && (
@@ -514,7 +656,7 @@ export default function CustomerMarketplace() {
                                   {variation.prep && ` (${variation.prep})`}
                                   {variation.count && ` ${variation.count}`}
                                   {variation.unit && ` ${variation.unit}`}
-                                  {` - KSh ${discount > 0 ? variationDiscountedPrice : variationPrice}`}
+                                  {` - ₹${discount > 0 ? variationDiscountedPrice : variationPrice}`}
                                 </option>
                               )
                             })}
@@ -531,18 +673,18 @@ export default function CustomerMarketplace() {
                               const variationDiscountedPrice = discount > 0 ? Math.round(variationPrice * (1 - discount / 100)) : variationPrice
                               return (
                                 <>
-                                  <p style={{ color: '#16a34a', fontSize: '24px', fontWeight: 'bold', margin: '0' }}>KSh {variationDiscountedPrice}</p>
+                                  <p style={{ color: '#16a34a', fontSize: '24px', fontWeight: 'bold', margin: '0' }}>₹{variationDiscountedPrice}</p>
                                   {discount > 0 && (
-                                    <p style={{ color: '#9ca3af', fontSize: '16px', textDecoration: 'line-through', margin: '0' }}>KSh {variationPrice}</p>
+                                    <p style={{ color: '#9ca3af', fontSize: '16px', textDecoration: 'line-through', margin: '0' }}>₹{variationPrice}</p>
                                   )}
                                 </>
                               )
                             } else {
                               return (
                                 <>
-                                  <p style={{ color: '#16a34a', fontSize: '24px', fontWeight: 'bold', margin: '0' }}>KSh {discountedPrice}</p>
+                                  <p style={{ color: '#16a34a', fontSize: '24px', fontWeight: 'bold', margin: '0' }}>₹{discountedPrice}</p>
                                   {discount > 0 && (
-                                    <p style={{ color: '#9ca3af', fontSize: '16px', textDecoration: 'line-through', margin: '0' }}>KSh {originalPrice}</p>
+                                    <p style={{ color: '#9ca3af', fontSize: '16px', textDecoration: 'line-through', margin: '0' }}>₹{originalPrice}</p>
                                   )}
                                 </>
                               )
@@ -573,7 +715,14 @@ export default function CustomerMarketplace() {
                           </span>
                         </div>
                       </div>
-                      <button style={{
+                      <button 
+                        onClick={() => {
+                          const selectedVariation = product.variations ? 
+                            { ...product.variations[selectedVariations[product.id] || 0], index: selectedVariations[product.id] || 0 } : 
+                            null
+                          addToCart({ ...product, vendorName: selectedVendor.name }, selectedVariation)
+                        }}
+                        style={{
                         width: '100%',
                         padding: '12px',
                         backgroundColor: '#16a34a',

@@ -1,8 +1,16 @@
 import Link from 'next/link'
+import { useCart } from '../../lib/CartContext'
+import SEOHead from '../../components/SEOHead'
 
 export default function CustomerOrders() {
+  const { getCartCount } = useCart()
   return (
     <>
+      <SEOHead 
+        title="My Orders - Order History | FreshCuts"
+        description="Track your fresh meat orders. View order history, delivery status and reorder your favorite products from local vendors."
+        url="https://freshcuts.com/orders"
+      />
       {/* Customer Navigation Bar */}
       <nav style={{
         backgroundColor: '#16a34a',
@@ -26,8 +34,27 @@ export default function CustomerOrders() {
           </Link>
           
           <div style={{ display: 'flex', gap: '20px' }}>
-            <Link href="/customer/cart" style={{ color: 'white', textDecoration: 'none', fontSize: '20px' }}>
+            <Link href="/customer/cart" style={{ color: 'white', textDecoration: 'none', fontSize: '20px', position: 'relative' }}>
               🛒
+              {getCartCount() > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-8px',
+                  backgroundColor: '#ef4444',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold'
+                }}>
+                  {getCartCount()}
+                </span>
+              )}
             </Link>
             <Link href="/customer/orders" style={{ color: 'white', textDecoration: 'none', fontSize: '20px' }}>
               📦

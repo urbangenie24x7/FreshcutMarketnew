@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Navigation from '../../components/Navigation'
+import SEOHead from '../../components/SEOHead'
 
 export default function Admin() {
   const [mounted, setMounted] = useState(false)
@@ -348,28 +349,53 @@ export default function Admin() {
 
   return (
     <>
+      <SEOHead 
+        title="Admin Dashboard | FreshCuts"
+        description="Manage FreshCuts marketplace. Vendor onboarding, product management, and platform settings."
+        url="https://freshcuts.com/admin"
+      />
       <Navigation />
       <div style={{ padding: '20px', fontFamily: 'Arial', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: '#16a34a', fontSize: '32px', margin: '0' }}>Admin Dashboard</h1>
-        <button
-          onClick={async () => {
-            const { seedTestData } = await import('../../lib/seedData')
-            const result = await seedTestData()
-            alert(result ? 'Seed data added successfully!' : 'Seed data failed!')
-          }}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          Run Seed Data
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={async () => {
+              const { seedTestData } = await import('../../lib/seedData')
+              const result = await seedTestData()
+              alert(result ? 'Seed data added successfully!' : 'Seed data failed!')
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#16a34a',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            Seed Database
+          </button>
+          <button
+            onClick={async () => {
+              const { addVendorProducts } = await import('../../lib/addVendorProducts')
+              const result = await addVendorProducts()
+              alert(result ? 'Vendor products added successfully!' : 'Vendor products failed!')
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#2563eb',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            Add Vendor Products
+          </button>
+        </div>
       </div>
       
       {/* Margin Settings */}
